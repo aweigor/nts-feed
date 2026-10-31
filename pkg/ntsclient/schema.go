@@ -101,6 +101,7 @@ type EpisodesResponse struct {
 	Results  []EpisodeInfo `json:"results"`
 }
 
+// Same as Episode - need to merge (:todo)
 type EpisodeInfo struct {
 	Status          string        `json:"status"`
 	Updated         string        `json:"updated"`
@@ -200,3 +201,5 @@ type Track struct {
 	ISRCID             *string `json:"isrc_id"`
 	MusicBrainzTrackID *string `json:"musicbrainz_track_id"`
 }
+
+type EpisodeInfoResponse = Episode

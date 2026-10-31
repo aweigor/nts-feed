@@ -79,6 +79,32 @@ func (client *NTSClient) FetchShowEpisodes(ctx context.Context, showId string, p
 	return &out, err
 }
 
+func (client *NTSClient) FetchEpisodeInfo(ctx context.Context, showId string, episodeId string) (*EpisodeInfoResponse, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := client.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request failed", resp.Status)
+	}
+
+	var out EpisodeInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return nil, err
+	}
+
+	return &out, err
+}
+
 func (client *NTSClient) buildShowEpisodesURL(showId string, urlQuery string) string {
 	urlPath := strings.ReplaceAll(GetShowEpisodesPath, "{show_id}", showId)
 	return fmt.Sprintf("%s%s?%s", client.baseUrl, urlPath, urlQuery)
