@@ -31,7 +31,8 @@ func NewShowsHandler(router *http.ServeMux, deps ShowsHandlerDeps) {
 }
 
 func (handler *ShowsHandler) HandleEpisode() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
+	return func(w http.ResponseWriter, r *http.Request) {
+	}
 }
 
 func (handler *ShowsHandler) HandleTracklist() http.HandlerFunc {
