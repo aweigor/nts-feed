@@ -160,12 +160,12 @@ feed:
 | `page`     | integer  | `1`     | Page number (alternative to `offset`)       | `?page=3`                      |
 | `since`    | datetime | —       | Items published after this date (ISO 8601)  | `?since=2026-08-01T00:00:00Z`  |
 | `before`   | datetime | —       | Items published before this date (ISO 8601) | `?before=2026-08-01T00:00:00Z` |
-| `category` | string   | —       | Filter by category / tag                    | `?category=tech`               |
-| `author`   | string   | —       | Filter by author username / ID              | `?author=johndoe`              |
-| `q`        | string   | —       | Search query in titles and content          | `?q=golang+tutorial`           |
+| `category` | string   | —       | Filter by category / tag                    | `?category=tech`               | not implemented
+| `author`   | string   | —       | Filter by author username / ID              | `?author=johndoe`              | not implemented
+| `q`        | string   | —       | Search query in titles and content          | `?q=golang+tutorial`           | not implemented
 | `order`    | string   | `desc`  | Sort order: `desc` or `asc`                 | `?order=asc`                   |
-| `full`     | boolean  | `false` | Include full content instead of excerpts    | `?full=true`                   |
-| `callback` | string   | —       | JSONP callback function name                | `?callback=myCallback`         |
+| `full`     | boolean  | `false` | Include full content instead of excerpts    | `?full=true`                   | no effect
+| `callback` | string   | —       | JSONP callback function name                | `?callback=myCallback`         | no effect
 
 ## API Reference
 
