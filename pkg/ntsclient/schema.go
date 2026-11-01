@@ -158,8 +158,8 @@ type Episode struct {
 	Description     string        `json:"description"`
 	DescriptionHTML string        `json:"description_html"`
 	ExternalLinks   []string      `json:"external_links"`
-	Moods           []Taxonomy    `json:"moods"`
-	Genres          []Taxonomy    `json:"genres"`
+	Moods           []Mood        `json:"moods"`
+	Genres          []Genre       `json:"genres"`
 	LocationShort   string        `json:"location_short"`
 	LocationLong    string        `json:"location_long"`
 	Intensity       string        `json:"intensity"`

@@ -1,6 +1,10 @@
 package shows
 
-import "time"
+import (
+	"time"
+
+	"github.com/aweigor/nts-feed-generator/pkg/ntsclient"
+)
 
 type Resultset struct {
 	Count  int `json:"count"`
@@ -59,27 +63,27 @@ type Embeds struct {
 }
 
 type EpisodeInfoResponse struct {
-	Status          string        `json:"status"`
-	Updated         time.Time     `json:"updated"`
-	Name            string        `json:"name"`
-	Description     string        `json:"description"`
-	DescriptionHTML string        `json:"description_html"`
-	ExternalLinks   []interface{} `json:"external_links"`
-	Moods           []interface{} `json:"moods"`
-	Genres          []Genre       `json:"genres"`
-	LocationShort   string        `json:"location_short"`
-	LocationLong    string        `json:"location_long"`
-	Intensity       string        `json:"intensity"`
-	Media           Media         `json:"media"`
-	EpisodeAlias    string        `json:"episode_alias"`
-	ShowAlias       string        `json:"show_alias"`
-	Broadcast       time.Time     `json:"broadcast"`
-	Mixcloud        string        `json:"mixcloud"`
-	AudioSources    []AudioSource `json:"audio_sources"`
-	Brand           interface{}   `json:"brand"`
-	Embeds          Embeds        `json:"embeds"`
+	Status          string                  `json:"status"`
+	Updated         time.Time               `json:"updated"`
+	Name            string                  `json:"name"`
+	Description     string                  `json:"description"`
+	DescriptionHTML string                  `json:"description_html"`
+	ExternalLinks   interface{}             `json:"external_links"`
+	Moods           []ntsclient.Mood        `json:"moods"`
+	Genres          []ntsclient.Genre       `json:"genres"`
+	LocationShort   string                  `json:"location_short"`
+	LocationLong    string                  `json:"location_long"`
+	Intensity       string                  `json:"intensity"`
+	Media           Media                   `json:"media"`
+	EpisodeAlias    string                  `json:"episode_alias"`
+	ShowAlias       string                  `json:"show_alias"`
+	Broadcast       time.Time               `json:"broadcast"`
+	Mixcloud        string                  `json:"mixcloud"`
+	AudioSources    []ntsclient.AudioSource `json:"audio_sources"`
+	Brand           interface{}             `json:"brand"`
+	Tracklist       []ntsclient.Track       `json:"tracklist"`
 }
 
 type EpisodeTracklistResponse struct {
-	Results []TracklistItem `json:"results"`
+	Tracklist []ntsclient.Track `json:"tracklist"`
 }
