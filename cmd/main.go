@@ -10,6 +10,7 @@ import (
 	"github.com/aweigor/nts-feed-generator/config"
 	"github.com/aweigor/nts-feed-generator/internal/feeds"
 	"github.com/aweigor/nts-feed-generator/internal/heartbeat"
+	"github.com/aweigor/nts-feed-generator/internal/shows"
 	"github.com/aweigor/nts-feed-generator/pkg/logger"
 	"github.com/aweigor/nts-feed-generator/pkg/middleware"
 	"github.com/aweigor/nts-feed-generator/pkg/ntsclient"
@@ -35,6 +36,14 @@ func NewApp() http.Handler {
 	feeds.NewFeedsHandler(router, feeds.FeedsHandlerDeps{
 		NTSClient: ntsClient,
 		FeedsConfig: &config.FeedsConfig{
+			Nts: conf.Nts,
+		},
+		Logger: logger,
+	})
+
+	shows.NewShowsHandler(router, shows.ShowsHandlerDeps{
+		NTSClient: ntsClient,
+		ShowsConfig: &config.ShowsConfig{
 			Nts: conf.Nts,
 		},
 		Logger: logger,
