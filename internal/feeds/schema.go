@@ -31,6 +31,7 @@ type ChannelItem struct {
 	Enclosure   Enclosure `json:"enclosure"`
 	GUID        string    `json:"guid"`
 	ShowID      string    `json:"nts:show_id"`
+	EpisodeID   string    `json:"nts:episode_id"`
 	AirDate     string    `json:"nts:air_date"`
 	Duration    *int      `json:"nts:duration"`
 	Tracklist   []Track   `json:"tracklist"`

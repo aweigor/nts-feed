@@ -80,7 +80,7 @@ func (client *NTSClient) FetchShowEpisodes(ctx context.Context, showId string, p
 }
 
 func (client *NTSClient) FetchEpisodeInfo(ctx context.Context, showId string, episodeId string) (*EpisodeInfoResponse, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, client.buildShowEpisodeInfoURL(showId, episodeId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -107,9 +107,15 @@ func (client *NTSClient) FetchEpisodeInfo(ctx context.Context, showId string, ep
 
 func (client *NTSClient) buildShowEpisodesURL(showId string, urlQuery string) string {
 	urlPath := strings.ReplaceAll(GetShowEpisodesPath, "{show_id}", showId)
-	return fmt.Sprintf("%s%s?%s", client.baseUrl, urlPath, urlQuery)
+	return fmt.Sprintf("%s/%s?%s", client.baseUrl, urlPath, urlQuery)
 }
 
 func (client *NTSClient) buildLatestEpisodesURL(urlQuery string) string {
-	return fmt.Sprintf("%s%s?%s", client.baseUrl, GetLatestPath, urlQuery)
+	return fmt.Sprintf("%s/%s?%s", client.baseUrl, GetLatestPath, urlQuery)
+}
+
+func (client *NTSClient) buildShowEpisodeInfoURL(showID string, episodeID string) string {
+	urlPath := strings.ReplaceAll(GetEpisodeInfoPath, "{show_id}", showID)
+	urlPath = strings.ReplaceAll(urlPath, "{episode_id}", episodeID)
+	return fmt.Sprintf("%s/%s", client.baseUrl, urlPath)
 }

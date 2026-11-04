@@ -127,11 +127,20 @@ func (handler *FeedsHandler) buildEpisodeLinkFromArticle(articlePath string) str
 
 func (handler *FeedsHandler) buildEpisodeLinkFromEpisode(showID string, episodeAlias string) string {
 	urlPath := strings.ReplaceAll(ntsclient.GetShowEpisodesPath, "{show_id}", showID)
-	return fmt.Sprintf("%s%s/%s", handler.Nts.APIV2Url, urlPath, episodeAlias)
+	return fmt.Sprintf("%s/%s/%s", handler.Nts.APIV2Url, urlPath, episodeAlias)
+}
+
+func (handler *FeedsHandler) getEpisodeIdFromArticlePath(articlePath string) string {
+	return path.Base(articlePath)
 }
 
 func (handler *FeedsHandler) getShowIdFromArticlePath(articlePath string) string {
-	return path.Base(articlePath)
+	parts := strings.Split(path.Dir(articlePath), "/")
+	idx := len(parts) - 2
+	if idx >= 0 {
+		return parts[idx]
+	}
+	return ""
 }
 
 func (handler *FeedsHandler) channelItemFromArticle(articleInfo *ntsclient.ArticleInfo) ChannelItem {
@@ -152,7 +161,8 @@ func (handler *FeedsHandler) channelItemFromArticle(articleInfo *ntsclient.Artic
 		GUID:        "",
 		AirDate:     articleInfo.LocalDate,
 		Tracklist:   []Track{},
-		ShowID:      handler.getShowIdFromArticlePath(articleInfo.Article.Path),
+		ShowID:      handler.getShowIdFromArticlePath(articleInfo.ArticleType),
+		EpisodeID:   handler.getEpisodeIdFromArticlePath(articleInfo.Article.Path),
 	}
 }
 
@@ -174,7 +184,8 @@ func (handler *FeedsHandler) channelItemFromEpisode(episodeInfo *ntsclient.Episo
 		GUID:        "",
 		AirDate:     episodeInfo.Broadcast,
 		Tracklist:   []Track{},
-		ShowID:      episodeInfo.EpisodeAlias,
+		ShowID:      episodeInfo.ShowAlias,
+		EpisodeID:   episodeInfo.EpisodeAlias,
 	}
 }
 

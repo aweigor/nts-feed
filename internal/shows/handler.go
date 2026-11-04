@@ -28,8 +28,8 @@ func NewShowsHandler(router *http.ServeMux, deps ShowsHandlerDeps) {
 		ShowsConfig: deps.ShowsConfig,
 		Logger:      deps.Logger,
 	}
-	router.HandleFunc("/shows/{show_id}/episodes/{episode_id}", handler.HandleEpisode())
-	router.HandleFunc("/shows/{show_id}/episodes/{episode_id}/tracklist", handler.HandleTracklist())
+	router.HandleFunc("/shows/{show_id}/{episode_id}", handler.HandleEpisode())
+	router.HandleFunc("/shows/{show_id}/{episode_id}/tracklist", handler.HandleTracklist())
 }
 
 func (handler *ShowsHandler) HandleEpisode() http.HandlerFunc {

@@ -171,7 +171,7 @@ feed:
 
 ### 1. Episode Info
 
-`GET /shows/{show_id}/episodes/{episode_id}`
+`GET /shows/{show_id}/{episode_id}`
 
 Returns an [Episode](#episode) with an additional `embeds` field:
 
@@ -194,7 +194,7 @@ Returns an [Episode](#episode) with an additional `embeds` field:
 
 ### 2. Episode Tracklist
 
-`GET /shows/{show_id}/episodes/{episode_id}/tracklist`
+`GET /shows/{show_id}/{episode_id}/tracklist`
 
 ```json
 {
