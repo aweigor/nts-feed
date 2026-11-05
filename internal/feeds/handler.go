@@ -53,10 +53,20 @@ func (handler *FeedsHandler) HandleLatest() http.HandlerFunc {
 		}
 
 		channelItems := make([]ChannelItem, len(episodes.Results))
-
+		withTrackList := handler.Tracklist
 		for i := range len(episodes.Results) {
-			sourceData := episodes.Results[i]
-			channelItems[i] = handler.channelItemFromArticle(&sourceData)
+			episodeInfo := episodes.Results[i]
+
+			episodeID := handler.getEpisodeIdFromArticlePath(episodeInfo.Article.Path)
+			showID := handler.getShowIdFromArticlePath(episodeInfo.Article.Path)
+			var tracklist ntsclient.Tracklist
+			if withTrackList {
+				episode, _ := handler.NTSClient.FetchEpisodeInfo(ctx, showID, episodeID)
+				if episode != nil {
+					tracklist = episode.Embeds.Tracklist
+				}
+			}
+			channelItems[i] = handler.channelItemFromArticle(&episodeInfo, showID, episodeID, tracklist.Results)
 		}
 
 		data := RSSResponse{
@@ -101,8 +111,18 @@ func (handler *FeedsHandler) HandleShow() http.HandlerFunc {
 		channelItems := make([]ChannelItem, len(episodes.Results))
 
 		for i := range len(episodes.Results) {
+
 			sourceData := episodes.Results[i]
-			channelItems[i] = handler.channelItemFromEpisode(&sourceData)
+
+			var tracklist ntsclient.Tracklist
+			if handler.Tracklist {
+				episode, _ := handler.NTSClient.FetchEpisodeInfo(ctx, sourceData.ShowAlias, sourceData.EpisodeAlias)
+				if episode != nil {
+					tracklist = episode.Embeds.Tracklist
+				}
+			}
+
+			channelItems[i] = handler.channelItemFromEpisode(&sourceData, tracklist.Results)
 		}
 
 		data := RSSResponse{
@@ -143,12 +163,17 @@ func (handler *FeedsHandler) getShowIdFromArticlePath(articlePath string) string
 	return ""
 }
 
-func (handler *FeedsHandler) channelItemFromArticle(articleInfo *ntsclient.ArticleInfo) ChannelItem {
+func (handler *FeedsHandler) channelItemFromArticle(articleInfo *ntsclient.ArticleInfo, showID string, episodeID string, tracklist []ntsclient.Track) ChannelItem {
 	enclosure := Enclosure{}
 
 	if len(articleInfo.AudioSources) > 0 {
 		enclosure.URL = articleInfo.AudioSources[0].URL
 		enclosure.Type = articleInfo.AudioSources[0].Source
+	}
+
+	tl := []Track{}
+	if tracklist != nil {
+		tl = tracklist
 	}
 
 	return ChannelItem{
@@ -160,18 +185,23 @@ func (handler *FeedsHandler) channelItemFromArticle(articleInfo *ntsclient.Artic
 		Duration:    nil,
 		GUID:        "",
 		AirDate:     articleInfo.LocalDate,
-		Tracklist:   []Track{},
-		ShowID:      handler.getShowIdFromArticlePath(articleInfo.ArticleType),
-		EpisodeID:   handler.getEpisodeIdFromArticlePath(articleInfo.Article.Path),
+		Tracklist:   tl,
+		ShowID:      showID,
+		EpisodeID:   episodeID,
 	}
 }
 
-func (handler *FeedsHandler) channelItemFromEpisode(episodeInfo *ntsclient.EpisodeInfo) ChannelItem {
+func (handler *FeedsHandler) channelItemFromEpisode(episodeInfo *ntsclient.EpisodeInfo, tracklist []ntsclient.Track) ChannelItem {
 	enclosure := Enclosure{}
 
 	if len(episodeInfo.AudioSources) > 0 {
 		enclosure.URL = episodeInfo.AudioSources[0].URL
 		enclosure.Type = episodeInfo.AudioSources[0].Source
+	}
+
+	tl := []Track{}
+	if tracklist != nil {
+		tl = tracklist
 	}
 
 	return ChannelItem{
@@ -183,7 +213,7 @@ func (handler *FeedsHandler) channelItemFromEpisode(episodeInfo *ntsclient.Episo
 		Duration:    nil,
 		GUID:        "",
 		AirDate:     episodeInfo.Broadcast,
-		Tracklist:   []Track{},
+		Tracklist:   tl,
 		ShowID:      episodeInfo.ShowAlias,
 		EpisodeID:   episodeInfo.EpisodeAlias,
 	}

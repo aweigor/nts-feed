@@ -58,13 +58,9 @@ nts:
 api:
   public_url: "https://nts-feed/api" # Public server address
 
-tracklist:
-  cache_ttl: "1h"
-  enabled: true
-
 feed:
   output_dir: "./feeds"
-  include_tracklist_url: true
+  tracklist: true
 ```
 
 ## Feed Structure

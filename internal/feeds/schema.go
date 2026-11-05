@@ -1,5 +1,7 @@
 package feeds
 
+import "github.com/aweigor/nts-feed-generator/pkg/ntsclient"
+
 type FeedsQueryParams struct {
 	format string
 	offset int
@@ -44,17 +46,4 @@ type Enclosure struct {
 	Length *int   `json:"length"`
 }
 
-// Track represents one track within an episode's tracklist.
-type Track struct {
-	Artist             string  `json:"artist"`
-	Title              string  `json:"title"`
-	UID                *string `json:"uid"`                  // *string: UUID or null
-	Offset             *int    `json:"offset"`               // *int: integer or null
-	Duration           *int    `json:"duration"`             // *int: integer or null
-	OffsetEstimate     *int    `json:"offset_estimate"`      // *int: integer or null
-	DurationEstimate   *int    `json:"duration_estimate"`    // *int: integer or null
-	ACRID              *string `json:"acr_id"`               // *string: string or null
-	DeezerTrackID      *int    `json:"deezer_track_id"`      // *int: integer or null
-	ISRCID             *string `json:"isrc_id"`              // *string: string or null
-	MusicBrainzTrackID *string `json:"musicbrainz_track_id"` // *string: UUID or null
-}
+type Track = ntsclient.Track

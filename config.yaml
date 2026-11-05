@@ -3,3 +3,6 @@ nts:
 
 server:
   public_url: "https://nts-feed/api"
+
+feeds:
+  tracklist: false

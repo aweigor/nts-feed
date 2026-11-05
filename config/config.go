@@ -21,7 +21,8 @@ type AuthConfig struct {
 }
 
 type FeedsConfig struct {
-	Nts NtsAPIProperties
+	Nts       NtsAPIProperties
+	Tracklist bool `mapstructure:"tracklist"`
 }
 
 type ShowsConfig struct {

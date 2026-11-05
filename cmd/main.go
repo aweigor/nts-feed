@@ -36,7 +36,8 @@ func NewApp() http.Handler {
 	feeds.NewFeedsHandler(router, feeds.FeedsHandlerDeps{
 		NTSClient: ntsClient,
 		FeedsConfig: &config.FeedsConfig{
-			Nts: conf.Nts,
+			Nts:       conf.Feeds.Nts,
+			Tracklist: conf.Feeds.Tracklist,
 		},
 		Logger: logger,
 	})
