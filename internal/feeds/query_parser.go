@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"time"
 )
 
 const (
@@ -31,9 +32,20 @@ func (parser *FeedsQueryParser) parseQuery(q url.Values) (*FeedsQueryParams, err
 		"atom": true,
 	}
 
-	offset, err := strconv.Atoi(q.Get("offset"))
-	if err != nil {
-		offset = DEFAULT_OFFSET
+	if !allowedFormats[format] {
+		return nil, fmt.Errorf("[FeedsQueryParser]: format must be 'json' or 'xml' or 'atom', got '%s'", format)
+	}
+
+	offset := DEFAULT_OFFSET
+
+	queryPage, err := strconv.Atoi(q.Get("page"))
+	if err == nil {
+		offset = queryPage
+	}
+
+	queryOffset, err := strconv.Atoi(q.Get("offset"))
+	if err == nil {
+		offset = queryOffset
 	}
 
 	limit, err := strconv.Atoi(q.Get("limit"))
@@ -41,13 +53,29 @@ func (parser *FeedsQueryParser) parseQuery(q url.Values) (*FeedsQueryParams, err
 		limit = DEFAULT_LIMIT
 	}
 
-	if !allowedFormats[format] {
-		return nil, fmt.Errorf("[FeedsQueryParser]: format must be 'json' or 'xml' or 'atom', got '%s'", format)
-	}
-
-	return &FeedsQueryParams{
+	result := &FeedsQueryParams{
 		format,
 		offset,
 		limit,
-	}, nil
+		nil,
+		nil,
+	}
+
+	sinceStr := q.Get("since")
+	if sinceStr != "" {
+		since, err := time.Parse(time.RFC3339, sinceStr)
+		if err != nil {
+			result.since = &since
+		}
+	}
+
+	beforeStr := q.Get("before")
+	if beforeStr != "" {
+		before, err := time.Parse(time.RFC3339, beforeStr)
+		if err != nil {
+			result.before = &before
+		}
+	}
+
+	return result, nil
 }

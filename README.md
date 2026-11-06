@@ -159,7 +159,7 @@ feed:
 | `category` | string   | —       | Filter by category / tag                    | `?category=tech`               | not implemented
 | `author`   | string   | —       | Filter by author username / ID              | `?author=johndoe`              | not implemented
 | `q`        | string   | —       | Search query in titles and content          | `?q=golang+tutorial`           | not implemented
-| `order`    | string   | `desc`  | Sort order: `desc` or `asc`                 | `?order=asc`                   |
+| `order`    | string   | `desc`  | Sort order: `desc` or `asc`                 | `?order=asc`                   | not implemented
 | `full`     | boolean  | `false` | Include full content instead of excerpts    | `?full=true`                   | no effect
 | `callback` | string   | —       | JSONP callback function name                | `?callback=myCallback`         | no effect
 

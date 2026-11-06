@@ -1,11 +1,17 @@
 package feeds
 
-import "github.com/aweigor/nts-feed-generator/pkg/ntsclient"
+import (
+	"time"
+
+	"github.com/aweigor/nts-feed-generator/pkg/ntsclient"
+)
 
 type FeedsQueryParams struct {
 	format string
 	offset int
 	limit  int
+	since  *time.Time
+	before *time.Time
 }
 
 // RSSResponse represents the root of the NTS radio feed.
