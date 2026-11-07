@@ -1,0 +1,8 @@
+nts:
+  api_v2_url: "https://www.nts.live/api/v2"
+
+server:
+  public_url: "https://nts-feed/api"
+
+feeds:
+  tracklist: false

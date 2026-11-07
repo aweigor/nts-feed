@@ -24,6 +24,31 @@ A web server for generating RSS / JSON feeds from NTS Radio, configurable via th
     - [AudioSource](#audiosource)
   - [Error Codes](#error-codes)
 
+## Running
+
+**Prerequisites:** Go 1.21+
+
+1. Copy the example env file and set your secret:
+   ```sh
+   cp .env.example .env
+   # edit .env and set API_SECRET
+   ```
+
+2. Run with `go run` (from the project root):
+   ```sh
+   go run ./cmd/main.go
+   ```
+
+3. Or build and run the binary:
+   ```sh
+   go build -o nts-feed-generator ./cmd/main.go
+   ./nts-feed-generator
+   ```
+
+The server starts on port `9000`. Check `GET /heartbeat` to verify it's up.
+
+> **Note:** Both `config.yaml` and `.env` must be present in the directory where you run the binary / `go run` command.
+
 ## Configuration
 
 ```yaml
@@ -33,13 +58,9 @@ nts:
 api:
   public_url: "https://nts-feed/api" # Public server address
 
-tracklist:
-  cache_ttl: "1h"
-  enabled: true
-
 feed:
   output_dir: "./feeds"
-  include_tracklist_url: true
+  tracklist: true
 ```
 
 ## Feed Structure
@@ -91,7 +112,7 @@ feed:
     "category": "Channel category",
     "image": "Channel Image Url",
     "lastBuildDate": "Last Updated Date",
-    "item": {
+    "items": [{
       "title": "Episode Title",
       "link": "https://www.nts.live/{episode_path}",
       "description": "Episode description",
@@ -120,7 +141,7 @@ feed:
           "musicbrainz_track_id": "string (UUID or null)"
         }
       ]
-    }
+    }]
   }
 }
 ```
@@ -135,18 +156,18 @@ feed:
 | `page`     | integer  | `1`     | Page number (alternative to `offset`)       | `?page=3`                      |
 | `since`    | datetime | —       | Items published after this date (ISO 8601)  | `?since=2026-08-01T00:00:00Z`  |
 | `before`   | datetime | —       | Items published before this date (ISO 8601) | `?before=2026-08-01T00:00:00Z` |
-| `category` | string   | —       | Filter by category / tag                    | `?category=tech`               |
-| `author`   | string   | —       | Filter by author username / ID              | `?author=johndoe`              |
-| `q`        | string   | —       | Search query in titles and content          | `?q=golang+tutorial`           |
-| `order`    | string   | `desc`  | Sort order: `desc` or `asc`                 | `?order=asc`                   |
-| `full`     | boolean  | `false` | Include full content instead of excerpts    | `?full=true`                   |
-| `callback` | string   | —       | JSONP callback function name                | `?callback=myCallback`         |
+| `category` | string   | —       | Filter by category / tag                    | `?category=tech`               | not implemented
+| `author`   | string   | —       | Filter by author username / ID              | `?author=johndoe`              | not implemented
+| `q`        | string   | —       | Search query in titles and content          | `?q=golang+tutorial`           | not implemented
+| `order`    | string   | `desc`  | Sort order: `desc` or `asc`                 | `?order=asc`                   | not implemented
+| `full`     | boolean  | `false` | Include full content instead of excerpts    | `?full=true`                   | no effect
+| `callback` | string   | —       | JSONP callback function name                | `?callback=myCallback`         | no effect
 
 ## API Reference
 
 ### 1. Episode Info
 
-`GET /shows/{show_id}/episodes/{episode_id}`
+`GET /shows/{show_id}/{episode_id}`
 
 Returns an [Episode](#episode) with an additional `embeds` field:
 
@@ -169,7 +190,7 @@ Returns an [Episode](#episode) with an additional `embeds` field:
 
 ### 2. Episode Tracklist
 
-`GET /shows/{show_id}/episodes/{episode_id}/tracklist`
+`GET /shows/{show_id}/{episode_id}/tracklist`
 
 ```json
 {
