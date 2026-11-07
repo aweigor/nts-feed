@@ -45,6 +45,18 @@ func (handler *FeedsHandler) HandleLatest() http.HandlerFunc {
 			res.Error(w, http.StatusBadRequest, err.Error())
 		}
 
+		ph, _ := NewPageHelper(handler.NTSClient)
+		offset := queryParams.offset
+		limit := queryParams.limit
+		if queryParams.before != nil && ph != nil {
+			limit = ph.BeforeToLimitLatest(queryParams.before, queryParams.offset)
+		}
+		if queryParams.since != nil && ph != nil {
+			offset = ph.SinceToOffsetLatest(queryParams.since)
+		}
+		queryParams.offset = offset
+		queryParams.limit = limit
+
 		searchParams := handler.buildEpisodesSearchParams(queryParams)
 		episodes, err := handler.NTSClient.FetchLatest(r.Context(), searchParams)
 		if err != nil {
@@ -96,10 +108,21 @@ func (handler *FeedsHandler) HandleShow() http.HandlerFunc {
 		}
 
 		showID := r.PathValue("show_id")
-
 		if showID == "" {
 			res.Error(w, http.StatusBadRequest, "Expected show id in route path")
 		}
+
+		ph, _ := NewPageHelper(handler.NTSClient)
+		offset := queryParams.offset
+		limit := queryParams.limit
+		if queryParams.before != nil && ph != nil {
+			limit = ph.BeforeToLimitShows(showID, queryParams.before, queryParams.offset)
+		}
+		if queryParams.since != nil && ph != nil {
+			offset = ph.SinceToOffsetShows(showID, queryParams.since)
+		}
+		queryParams.offset = offset
+		queryParams.limit = limit
 
 		searchParams := handler.buildEpisodesSearchParams(queryParams)
 		episodes, err := handler.NTSClient.FetchShowEpisodes(r.Context(), showID, searchParams)

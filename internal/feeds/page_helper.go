@@ -24,7 +24,7 @@ func NewPageHelper(client *ntsclient.NTSClient) (*PageHelper, error) {
 	}, nil
 }
 
-func (helper *PageHelper) beforeToLimitLatest(before *time.Time, offset int) int {
+func (helper *PageHelper) BeforeToLimitLatest(before *time.Time, offset int) int {
 	if before == nil {
 		return -1
 	}
@@ -54,8 +54,8 @@ func (helper *PageHelper) beforeToLimitLatest(before *time.Time, offset int) int
 	return limit
 }
 
-// always 12 since NTS limits shows by const
-func (helper *PageHelper) beforeToLimitShows(showId string, before *time.Time, offset int) int {
+// always 12 since NTS limits shows to const
+func (helper *PageHelper) BeforeToLimitShows(showId string, before *time.Time, offset int) int {
 	if before == nil {
 		return -1
 	}
@@ -86,7 +86,7 @@ func (helper *PageHelper) beforeToLimitShows(showId string, before *time.Time, o
 	return limit
 }
 
-func (helper *PageHelper) sinceToOffsetShows(showId string, since *time.Time) int {
+func (helper *PageHelper) SinceToOffsetShows(showId string, since *time.Time) int {
 	if since == nil {
 		return 0
 	}
@@ -126,7 +126,7 @@ func (helper *PageHelper) sinceToOffsetShows(showId string, since *time.Time) in
 	return offset
 }
 
-func (helper *PageHelper) sinceToOffsetLatest(since *time.Time) int {
+func (helper *PageHelper) SinceToOffsetLatest(since *time.Time) int {
 	if since == nil {
 		return 0
 	}

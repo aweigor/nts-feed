@@ -36,16 +36,14 @@ func (parser *FeedsQueryParser) parseQuery(q url.Values) (*FeedsQueryParams, err
 		return nil, fmt.Errorf("[FeedsQueryParser]: format must be 'json' or 'xml' or 'atom', got '%s'", format)
 	}
 
-	offset := DEFAULT_OFFSET
-
-	queryPage, err := strconv.Atoi(q.Get("page"))
-	if err == nil {
-		offset = queryPage
+	offset, err := strconv.Atoi(q.Get("offset"))
+	if err != nil {
+		offset = DEFAULT_OFFSET
 	}
 
-	queryOffset, err := strconv.Atoi(q.Get("offset"))
+	page, err := strconv.Atoi(q.Get("page"))
 	if err == nil {
-		offset = queryOffset
+		offset = page
 	}
 
 	limit, err := strconv.Atoi(q.Get("limit"))
