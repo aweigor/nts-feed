@@ -56,7 +56,7 @@ nts:
   api_url: "https://www.nts.live/api/v2/"
 
 api:
-  public_url: "https://nts-feed/api" # Public server address
+  public_url: "https://nts-feed/api"
 
 feed:
   output_dir: "./feeds"
